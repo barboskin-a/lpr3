@@ -1,0 +1,16 @@
+body {
+    font-family: Tahoma;
+    background-color: #fdf5ff;
+    color: #7d7283;
+    margin: 0;
+    padding: 0;
+}
+
+#task-manager {
+    display: flex;
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: rgb(208, 160, 215);
+    border-radius: 15px;
+}
