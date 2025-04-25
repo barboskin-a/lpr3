@@ -14,3 +14,45 @@ body {
     background-color: rgb(208, 160, 215);
     border-radius: 15px;
 }
+
+.tasks-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tasks-list li {
+    background-color: #d4bcf6;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(196, 196, 196, 0.3);
+}
+
+.tasks-item {
+    color: #b7b7b7;
+}
+
+.tasks-item h3 {
+    margin-top: 0;
+    color: #b69dd7;
+}
+
+.tasks-item button {
+    background-color: #805ca2;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.tasks-item button:hover {
+    background-color: #a886c7;
+}
+
+.task-item button:disabled {
+    background-color: #b6b6b6;
+    cursor: not-allowed;
+}
