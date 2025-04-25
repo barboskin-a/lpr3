@@ -45,7 +45,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     margin-right: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .tasks-item button:hover {
@@ -53,6 +53,50 @@ body {
 }
 
 .task-item button:disabled {
+    background-color: #b6b6b6;
+    cursor: not-allowed;
+}
+
+.task-creator {
+    background-color: #805ca2;
+    padding: 20px;
+    border-radius: 15px;
+    width: 400px;
+    margin-right: 25px;
+}
+
+.task-creator label {
+    display: block;
+    color: #cecece;
+    margin-bottom: 5px;
+}
+
+.task-creator input,
+.task-creator textarea {
+    color: #fff;
+    width: 350px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 2px solid #4c354f;
+    border-radius: 5px;
+    background-color: #604262;
+}
+
+.task-creator button {
+    background-color: #805ca2;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.task-creator button:hover {
+    background-color: #a886c7;
+}
+
+.task-creator button:disabled {
     background-color: #b6b6b6;
     cursor: not-allowed;
 }

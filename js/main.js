@@ -45,3 +45,40 @@ Vue.component('tasks-list', {
     </ul>
     `
 });
+
+Vue.component('tasks-creator', {
+    data() {
+        return {
+            taskTitle: '',
+            taskDescription: '',
+            taskDeadline: ''
+        };
+    },
+    computed: {
+        isTaskValid() {
+            return this.taskTitle && this.taskDescription && this.taskDeadline;
+        }
+    },
+    methods: {
+        createTask() {
+            if (this.isTaskValid) {
+                const newTask = {
+                    title: this.taskTitle,
+                    description: this.taskDescription,
+                    deadline: this.taskDeadline,
+                    status: 'pending',
+                    lastModified: new Date().toISOString()
+                };
+
+                this.$emit('add-task', newTask);
+                this.clearForm();
+            } else {
+                alert('Заполнены не все поля!');
+            }
+        },
+        // добавить отчистку
+    },
+    template: `
+        
+    `
+});
