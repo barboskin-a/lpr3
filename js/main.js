@@ -120,6 +120,59 @@ Vue.component('tasks-board', {
     `
 });
 
+Vue.component('tasks-item', {
+    props: {
+        task: {
+            type: Object,
+            required: true
+        },
+        index: {
+            type: Number,
+            required: true
+        }
+    },
+    data() {
+        return {
+            isEditing: false,
+            editedTitle: this.task.title,
+            editedDescription: this.task.description,
+            editedDeadline: this.task.deadline,
+            returnReason: ''
+        };
+    },
+    methods: {
+        removeTask() {
+            if (this.task.status === 'pending') {
+                this.$emit('delete-task', this.index);
+            } else {
+                alert('Удаление доступно только для задач в статусе "Запланированная"');
+            }
+        },
+        editTask() {
+            this.isEditing = true;
+        },
+        saveTask() {
+            const updatedTask = {
+                ...this.task,
+                title: this.editedTitle,
+                description: this.editedDescription,
+                deadline: this.editedDeadline,
+                lastModified: new Date().toISOString()
+            };
+            this.$emit('update-task', { index: this.index, updatedTask });
+            this.isEditing = false;
+        },
+        moveToInProgress() {
+            const updatedTask = { ...this.task, status: 'inProgress' };
+            this.$emit('update-task', { index: this.index, updatedTask });
+        },
+    },
+    template: `
+    
+    `
+});
+
+
 new Vue({
     el: '#task-manager',
     data() {
