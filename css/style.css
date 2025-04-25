@@ -1,17 +1,18 @@
 body {
     font-family: Tahoma;
     background-color: #fdf5ff;
-    color: #7d7283;
+    color: #848484;
     margin: 0;
     padding: 0;
 }
 
 #task-manager {
     display: flex;
+    flex-direction: column;
     max-width: 1400px;
     margin: 40px auto;
     padding: 24px;
-    background-color: rgb(208, 160, 215);
+    background-color: #f4daf8;
     border-radius: 15px;
 }
 
@@ -53,33 +54,33 @@ body {
 }
 
 .tasks-item button:disabled {
-    background-color: #b6b6b6;
+    background-color: #dbdbdb;
     cursor: not-allowed;
 }
 
 .tasks-creator {
-    background-color: #805ca2;
-    padding: 20px;
+    width: fit-content;
+    background-color: #e6c4eb;
+    height: fit-content;
+    padding: 25px;
     border-radius: 15px;
-    width: 400px;
-    margin-right: 25px;
 }
 
 .tasks-creator label {
     display: block;
-    color: #cecece;
-    margin-bottom: 5px;
+    color: #3b3a3a;
+    margin-bottom: 15px;
 }
 
 .tasks-creator input,
 .tasks-creator textarea {
-    color: #fff;
+    color: #212020;
     width: 350px;
     padding: 15px;
     margin-bottom: 10px;
-    border: 2px solid #4c354f;
+    border: 1px solid #c682cf;
     border-radius: 5px;
-    background-color: #604262;
+    background-color: #fffbff;
 }
 
 .tasks-creator button {
@@ -101,15 +102,15 @@ body {
     cursor: not-allowed;
 }
 
-.task-board {
+.tasks-board {
     display: flex;
     flex-direction: column;
     flex: 1;
     gap: 15px;
 }
 
-.task-board h2 {
-    border-bottom: 1px solid #9f76d7;
+.tasks-board h2 {
+    border-bottom: 2px dashed #9f76d7;
     padding-bottom: 5px;
     margin-bottom: 10px;
 }
@@ -124,16 +125,16 @@ body {
     margin-bottom: 15px;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 6px #dc1df92e;
 }
 
 .tasks-item {
-    color: #e0e0e0;
+    color: #5f5f5f;
 }
 
 .tasks-item h3 {
     margin-top: 0;
-    color: #bb86fc;
+    color: #4e4e4e;
 }
 
 .tasks-item button {

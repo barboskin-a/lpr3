@@ -1,32 +1,3 @@
-
-Vue.component('tasks-list', {
-    props: {
-        tasks: {
-            type: Array,
-            required: true
-        }
-    },
-    methods: {
-        removeTask(index) {
-            this.$emit('delete-task', index);
-        },
-        updateTask({ index, updatedTask }) {
-            this.$emit('update-task', { index, updatedTask });
-        }
-    },
-    template: `
-    <ul class="tasks-list">
-        <li v-for="(task, index) in tasks" :key="index">
-            <task-item 
-                :task="task" 
-                :index="index"
-                @delete-task="removeTask"
-                @update-task="updateTask" />
-        </li>
-    </ul>
-    `
-});
-
 Vue.component('tasks-creator', {
     data() {
         return {
@@ -67,18 +38,18 @@ Vue.component('tasks-creator', {
         <div class="tasks-creator">
             <form @submit.prevent="createTask">
                 <div>
-                    <label for="tasksTitle">Заголовок:</label>
-                    <input type="text" id="tasksTitle" v-model="tasksTitle" required />
+                    <label for="taskTitle">Заголовок:</label>
+                    <input type="text" id="taskTitle" v-model="taskTitle" required />
                 </div>
 
                 <div>
-                    <label for="tasksDescription">Описание:</label>
-                    <textarea id="tasksDescription" v-model="tasksDescription" required></textarea>
+                    <label for="taskDescription">Описание:</label>
+                    <textarea id="taskDescription" v-model="taskDescription" required></textarea>
                 </div>
 
                 <div>
-                    <label for="tasksDeadline">Дедлайн:</label>
-                    <input type="date" id="tasksDeadline" v-model="tasksDeadline" required />
+                    <label for="taskDeadline">Дедлайн:</label>
+                    <input type="date" id="taskDeadline" v-model="taskDeadline" required />
                 </div>
 
                 <button type="submit" :disabled="!isTaskValid">Создать задачу</button>
@@ -86,7 +57,6 @@ Vue.component('tasks-creator', {
         </div>
     `
 });
-
 
 Vue.component('tasks-board', {
     props: {
@@ -97,26 +67,54 @@ Vue.component('tasks-board', {
     },
     methods: {
         removeTask(index) {
-            this.$emit('delete-tasks', index);
+            this.$emit('delete-task', index);
         },
         updateTask({ index, updatedTask }) {
-            this.$emit('update-tasks', { index, updatedTask });
+            this.$emit('update-task', { index, updatedTask });
         }
     },
     template: `
     <div class="tasks-board">
         <h2>Запланированные задачи</h2>
-        <task-list :tasks="tasks.filter(task => task.status === 'pending')" @delete-task="removeTask" @update-task="updateTask"/>
+        <tasks-list :tasks="tasks.filter(task => task.status === 'pending')" @delete-task="removeTask" @update-task="updateTask"/>
 
         <h2>Задачи в работе</h2>
-        <task-list :tasks="tasks.filter(task => task.status === 'inProgress')" @delete-task="removeTask" @update-task="updateTask"/>
+        <tasks-list :tasks="tasks.filter(task => task.status === 'inProgress')" @delete-task="removeTask" @update-task="updateTask"/>
 
         <h2>Тестирование</h2>
-        <task-list :tasks="tasks.filter(task => task.status === 'testing')" @delete-task="removeTask" @update-task="updateTask"/>
+        <tasks-list :tasks="tasks.filter(task => task.status === 'testing')" @delete-task="removeTask" @update-task="updateTask"/>
 
         <h2>Готовые задачи</h2>
-        <task-list :tasks="tasks.filter(task => task.status === 'completed')" @delete-task="removeTask" @update-task="updateTask"/>
+        <tasks-list :tasks="tasks.filter(task => task.status === 'completed')" @delete-task="removeTask" @update-task="updateTask"/>
     </div>
+    `
+});
+
+Vue.component('tasks-list', {
+    props: {
+        tasks: {
+            type: Array,
+            required: true
+        }
+    },
+    methods: {
+        removeTask(index) {
+            this.$emit('delete-task', index);
+        },
+        updateTask({ index, updatedTask }) {
+            this.$emit('update-task', { index, updatedTask });
+        }
+    },
+    template: `
+    <ul class="tasks-list">
+        <li v-for="(task, index) in tasks" :key="index">
+            <tasks-item 
+                :task="task" 
+                :index="index"
+                @delete-task="removeTask"
+                @update-task="updateTask" />
+        </li>
+    </ul>
     `
 });
 
@@ -166,12 +164,76 @@ Vue.component('tasks-item', {
             const updatedTask = { ...this.task, status: 'inProgress' };
             this.$emit('update-task', { index: this.index, updatedTask });
         },
+        moveToTesting() {
+            const updatedTask = { ...this.task, status: 'testing' };
+            this.$emit('update-task', { index: this.index, updatedTask });
+        },
+        returnToInProgress() {
+            if (this.returnReason) {
+                const updatedTask = {
+                    ...this.task,
+                    status: 'inProgress',
+                    returnReason: this.returnReason
+                };
+                this.$emit('update-task', { index: this.index, updatedTask });
+                this.returnReason = '';
+            } else {
+                alert('Укажите причину возврата');
+            }
+        },
+        markAsCompleted() {
+            const updatedTask = {
+                ...this.task,
+                status: 'completed',
+                isOverdue: new Date(this.task.deadline) < new Date()
+            };
+            this.$emit('update-task', { index: this.index, updatedTask });
+        }
     },
     template: `
-    
+    <div class="tasks-item">
+        <div v-if="isEditing && task.status !== 'completed'">
+            <div>
+                <label for="editedTitle">Заголовок задачи:</label>
+                <input type="text" id="editedTitle" v-model="editedTitle" required />
+            </div>
+            <div>
+                <label for="editedDescription">Описание задачи:</label>
+                <textarea id="editedDescription" v-model="editedDescription" required></textarea>
+            </div>
+            <div>
+                <label for="editedDeadline">Дедлайн задачи:</label>
+                <input type="date" id="editedDeadline" v-model="editedDeadline" required />
+            </div>
+            <button @click="saveTask">Сохранить</button>
+        </div>
+        <div v-else>
+            <h3>{{ task.title }}</h3>
+            <p>{{ task.description }}</p>
+            <p><em>Дедлайн: {{ task.deadline }}</em></p>
+            <p>Status: {{ task.status }}</p>
+            <div v-if="task.status === 'testing' && task.returnReason">
+                <p><strong>Причина возврата задачи:</strong> {{ task.returnReason }}</p>
+            </div>
+            
+            <button v-if="task.status !== 'completed'" @click="editTask">Редактировать</button>
+            <button v-if="task.status === 'pending'" @click="removeTask">Удалить</button>
+            <button v-if="task.status === 'pending'" @click="moveToInProgress">Далее</button>
+            <button v-if="task.status === 'inProgress'" @click="moveToTesting">Тестирование</button>
+            <div v-if="task.status === 'testing'">
+                <label for="returnReason">Причина возврата:</label>
+                <textarea id="returnReason" v-model="returnReason" required></textarea>
+                <button @click="returnToInProgress">Вернуть в работу</button>
+                <button @click="markAsCompleted">Завершить</button>
+            </div>
+            <p v-if="task.status === 'completed'">
+                <strong v-if="task.isOverdue">Задача просрочена!</strong>
+                <strong v-else>Задача выполнена в срок.</strong>
+            </p>
+        </div>
+    </div>
     `
 });
-
 
 new Vue({
     el: '#task-manager',

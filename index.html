@@ -12,8 +12,8 @@
 <body>
     <h1>Kanban</h1>
     <div id="task-manager">
-        <task-creator @add-task="addNewTask"></task-creator>
-        <task-board :tasks="tasks" @delete-task="removeTask" @update-task="updateTask"></task-board>
+        <tasks-creator @add-task="addNewTask"></tasks-creator>
+        <tasks-board :tasks="tasks" @delete-task="removeTask" @update-task="updateTask"></tasks-board>
     </div>
 </body>
 </html>
