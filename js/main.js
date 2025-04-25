@@ -1,22 +1,3 @@
-new Vue({
-    el: '#task-manager',
-    data() {
-        return {
-            tasks: []
-        };
-    },
-    methods: {
-        addNewTask(newTask) {
-            this.tasks.push(newTask); //добавление задачи
-        },
-        updateTask({ index, updatedTask }) {
-            this.tasks.splice(index, 1, updatedTask); //обнвление задачи
-        },
-        removeTask(index) {
-            this.tasks.splice(index, 1); //удаление задачи
-        }
-    }
-});
 
 Vue.component('tasks-list', {
     props: {
@@ -76,9 +57,85 @@ Vue.component('tasks-creator', {
                 alert('Заполнены не все поля!');
             }
         },
-        // добавить отчистку
+        clearForm() {
+            this.taskTitle = '';
+            this.taskDescription = '';
+            this.taskDeadline = '';
+        }
     },
     template: `
-        
+        <div class="tasks-creator">
+            <form @submit.prevent="createTask">
+                <div>
+                    <label for="tasksTitle">Заголовок:</label>
+                    <input type="text" id="tasksTitle" v-model="tasksTitle" required />
+                </div>
+
+                <div>
+                    <label for="tasksDescription">Описание:</label>
+                    <textarea id="tasksDescription" v-model="tasksDescription" required></textarea>
+                </div>
+
+                <div>
+                    <label for="tasksDeadline">Дедлайн:</label>
+                    <input type="date" id="tasksDeadline" v-model="tasksDeadline" required />
+                </div>
+
+                <button type="submit" :disabled="!isTaskValid">Создать задачу</button>
+            </form>
+        </div>
     `
+});
+
+
+Vue.component('tasks-board', {
+    props: {
+        tasks: {
+            type: Array,
+            required: true
+        }
+    },
+    methods: {
+        removeTask(index) {
+            this.$emit('delete-tasks', index);
+        },
+        updateTask({ index, updatedTask }) {
+            this.$emit('update-tasks', { index, updatedTask });
+        }
+    },
+    template: `
+    <div class="tasks-board">
+        <h2>Запланированные задачи</h2>
+        <task-list :tasks="tasks.filter(task => task.status === 'pending')" @delete-task="removeTask" @update-task="updateTask"/>
+
+        <h2>Задачи в работе</h2>
+        <task-list :tasks="tasks.filter(task => task.status === 'inProgress')" @delete-task="removeTask" @update-task="updateTask"/>
+
+        <h2>Тестирование</h2>
+        <task-list :tasks="tasks.filter(task => task.status === 'testing')" @delete-task="removeTask" @update-task="updateTask"/>
+
+        <h2>Готовые задачи</h2>
+        <task-list :tasks="tasks.filter(task => task.status === 'completed')" @delete-task="removeTask" @update-task="updateTask"/>
+    </div>
+    `
+});
+
+new Vue({
+    el: '#task-manager',
+    data() {
+        return {
+            tasks: []
+        };
+    },
+    methods: {
+        addNewTask(newTask) {
+            this.tasks.push(newTask); //добавление задачи
+        },
+        updateTask({ index, updatedTask }) {
+            this.tasks.splice(index, 1, updatedTask); //обнвление задачи
+        },
+        removeTask(index) {
+            this.tasks.splice(index, 1); //удаление задачи
+        }
+    }
 });
